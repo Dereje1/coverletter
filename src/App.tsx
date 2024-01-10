@@ -1,9 +1,9 @@
-import Checkout from './checkout/Checkout'
+import CoverLetter from './components/CoverLetter'
 
 function App() {
 
   return (
-    <Checkout />
+    <CoverLetter />
   )
 }
 
