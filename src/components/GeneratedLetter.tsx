@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Typography from '@mui/material/Typography';
+import LinearProgress from '@mui/material/LinearProgress';
+import Paper from '@mui/material/Paper';
 
 
-export default function GeneratedLetter() {
+interface GeneratedLetterProps {
+    resume: string
+    description: string
+  }
+
+export default function GeneratedLetter({ resume, description }: GeneratedLetterProps) {
     const [letter, setLetter] = useState(null)
 
     const getGeneratedData = async () => {
-        const {data} = await axios.get('/api')
+        const { data } = await axios.post('/api', { resume, description })
         setLetter(data.letter)
     }
 
@@ -15,10 +21,10 @@ export default function GeneratedLetter() {
         getGeneratedData()
     }, [])
 
-    if(!letter) return null;
+    if (!letter) return <LinearProgress color="secondary" variant="indeterminate" />;
     return (
         <>
-            <Typography variant="subtitle1">{letter}</Typography>
+            <Paper elevation={3} sx={{padding: 2, whiteSpace: 'pre-wrap'}}>{letter}</Paper>
         </>
     );
 }

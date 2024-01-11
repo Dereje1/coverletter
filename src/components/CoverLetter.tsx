@@ -84,7 +84,7 @@ export default function CoverLetter() {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? <GeneratedLetter /> : (
+          {activeStep === steps.length ? <GeneratedLetter resume={resume} description={description} /> : (
             <React.Fragment>
               {getStepContent({
                 step: activeStep,
