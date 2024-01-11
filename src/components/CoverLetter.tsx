@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -12,13 +12,14 @@ import Typography from '@mui/material/Typography';
 import ResumeForm from './ResumeForm';
 import DescriptionForm from './DescriptionForm';
 import Review from './Review';
+import GeneratedLetter from './GeneratedLetter';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://dereje1.github.io/Portfolio-V3/">
+        Dereje Getahun
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -28,21 +29,37 @@ function Copyright() {
 
 const steps = ['Resume', 'Job Description', 'Review'];
 
-function getStepContent(step: number) {
+interface getStepContentProps {
+  step: number,
+  setResume: (resume: string) => void,
+  resume: string,
+  setDescription: (description: string) => void,
+  description: string
+}
+
+function getStepContent({
+  step,
+  setResume,
+  resume,
+  setDescription,
+  description
+}: getStepContentProps) {
   switch (step) {
     case 0:
-      return <ResumeForm />;
+      return <ResumeForm updateResume={(resume) => setResume(resume)} resume={resume} />;
     case 1:
-      return <DescriptionForm />;
+      return <DescriptionForm updateDescription={(description) => setDescription(description)} description={description} />;
     case 2:
-      return <Review />;
+      return <Review resume={resume} description={description} />;
     default:
       throw new Error('Unknown step');
   }
 }
 
 export default function CoverLetter() {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const [resume, setResume] = useState('')
+  const [description, setDescription] = useState('')
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -67,20 +84,15 @@ export default function CoverLetter() {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? (
+          {activeStep === steps.length ? <GeneratedLetter /> : (
             <React.Fragment>
-              <Typography variant="h5" gutterBottom>
-                Thank you for your order.
-              </Typography>
-              <Typography variant="subtitle1">
-                Your order number is #2001539. We have emailed your order
-                confirmation, and will send you an update when your order has
-                shipped.
-              </Typography>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              {getStepContent(activeStep)}
+              {getStepContent({
+                step: activeStep,
+                setResume,
+                resume,
+                setDescription,
+                description
+              })}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>

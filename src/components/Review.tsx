@@ -1,7 +1,12 @@
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
-export default function Review() {
+interface ReviewProps {
+  resume: string
+  description: string
+}
+
+export default function Review({resume, description}: ReviewProps) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width:'50%', marginRight: 2 }}>
@@ -15,6 +20,8 @@ export default function Review() {
           variant="filled"
           multiline
           minRows={15}
+          maxRows={15}
+          value={resume}
         />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', width:'50%' }}>
@@ -28,6 +35,8 @@ export default function Review() {
           variant="filled"
           multiline
           minRows={15}
+          maxRows={15}
+          value={description}
         />
       </div>
     </div>
