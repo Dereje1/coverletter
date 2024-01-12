@@ -11,8 +11,10 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import ResumeForm from './ResumeForm';
 import DescriptionForm from './DescriptionForm';
+import PromptPicker from './PromptPicker';
 import Review from './Review';
 import GeneratedLetter from './GeneratedLetter';
+import PromptObj from './PromptTypes';
 
 function Copyright() {
   return (
@@ -27,7 +29,7 @@ function Copyright() {
   );
 }
 
-const steps = ['Resume', 'Job Description', 'Review'];
+const steps = ['Resume', 'Job Description', 'Prompt', 'Review'];
 
 interface getStepContentProps {
   step: number,
@@ -35,6 +37,8 @@ interface getStepContentProps {
   resume: string,
   setDescription: (description: string) => void,
   description: string
+  setActivePrompt: (prompt: string) => void
+  activePrompt: string
 }
 
 function getStepContent({
@@ -42,7 +46,9 @@ function getStepContent({
   setResume,
   resume,
   setDescription,
-  description
+  description,
+  activePrompt,
+  setActivePrompt
 }: getStepContentProps) {
   switch (step) {
     case 0:
@@ -50,6 +56,8 @@ function getStepContent({
     case 1:
       return <DescriptionForm updateDescription={(description) => setDescription(description)} description={description} />;
     case 2:
+      return <PromptPicker setActivePrompt={(prompt) => setActivePrompt(prompt)} activePrompt={activePrompt} />
+    case 3:
       return <Review resume={resume} description={description} />;
     default:
       throw new Error('Unknown step');
@@ -60,6 +68,7 @@ export default function CoverLetter() {
   const [activeStep, setActiveStep] = useState(0);
   const [resume, setResume] = useState('')
   const [description, setDescription] = useState('')
+  const [activePrompt, setActivePrompt] = useState('prompt1');
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -74,8 +83,8 @@ export default function CoverLetter() {
       <CssBaseline />
       <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 1, md: 2 }, p: { xs: 1, md: 1 } }}>
-          <Typography component="h1" variant="h4" align="center">
-            Generate Cover Letter
+          <Typography component="h1" variant="h5" align="center">
+            Follow steps below to generate a cover letter
           </Typography>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
@@ -84,31 +93,45 @@ export default function CoverLetter() {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? <GeneratedLetter resume={resume} description={description} /> : (
-            <React.Fragment>
-              {getStepContent({
-                step: activeStep,
-                setResume,
-                resume,
-                setDescription,
-                description
-              })}
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                    Back
-                  </Button>
-                )}
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                >
-                  {activeStep === steps.length - 1 ? 'Generate Letter' : 'Next'}
-                </Button>
-              </Box>
-            </React.Fragment>
-          )}
+          {activeStep === steps.length ?
+            <GeneratedLetter
+              resume={resume}
+              description={description}
+              activePrompt={activePrompt}
+            /> : (
+              <React.Fragment>
+                {getStepContent({
+                  step: activeStep,
+                  setResume,
+                  resume,
+                  setDescription,
+                  description,
+                  setActivePrompt,
+                  activePrompt
+                })}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography sx={{ paddingTop: 4, fontWeight: 'bold' }}>
+                    {
+                      activeStep === steps.length - 1 ? `Prompt Type: ${PromptObj[activePrompt].name}` : ''
+                    }
+                  </Typography>
+                  <div>
+                    {activeStep !== 0 && (
+                      <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                        Back
+                      </Button>
+                    )}
+                    <Button
+                      variant="contained"
+                      onClick={handleNext}
+                      sx={{ mt: 3, ml: 1 }}
+                    >
+                      {activeStep === steps.length - 1 ? 'Generate Letter' : 'Next'}
+                    </Button>
+                  </div>
+                </Box>
+              </React.Fragment>
+            )}
         </Paper>
         <Copyright />
       </Container>

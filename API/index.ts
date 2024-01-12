@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 interface inputTypes {
   resume: string
   description: string
+  prompt: string
 }
 
 dotenv.config();
@@ -11,11 +12,12 @@ const app = express();
 app.use(express.json());
 
 app.post('/api', async (request: Request, response: Response) => {
-  const { resume, description }: inputTypes = request.body
-  const generatedLetter = await generateDraftLetter({ resume, description })
+  const { resume, description, prompt }: inputTypes = request.body
+  const generatedLetter = await generateDraftLetter({ resume, description, prompt })
   response.json({
     resume,
     description,
+    prompt,
     letter: generatedLetter
   });
 });

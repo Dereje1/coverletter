@@ -3,9 +3,24 @@ import OpenAI from 'openai';
 interface inputTypes {
     resume: string
     description: string
+    prompt: string
 }
 
-const generateDraftLetter = async ({ resume, description }: inputTypes) => {
+
+
+const getContent = (prompt: string, resume: string, jobDescription: string) => {
+    const PromptObj: {
+        [key: string]: string;
+    } = {
+        prompt1: `Given the following resume: ${resume} and this job description: ${jobDescription}, generate a professional and impactful cover letter that highlights relevant skills and experiences.`,
+        prompt2: `Based on the resume: ${resume} and the job description: ${jobDescription}, create a compelling cover letter that demonstrates the candidate's fit for the role.`,
+        prompt3: `Considering the provided resume: ${resume} and the job description: ${jobDescription}, draft a persuasive cover letter that showcases the candidate's qualifications and enthusiasm for the position.`,
+        prompt4: `With the resume: ${resume} and the job description: ${jobDescription} in mind, write a convincing cover letter that effectively markets the candidate's abilities and suitability for the job.`
+    }
+    return PromptObj[prompt];
+}
+
+const generateDraftLetter = async ({ resume, description, prompt }: inputTypes) => {
     try {
         if (!description.trim().length || !resume.length) {
             throw new Error(`Missing Resume or Description !!`);
@@ -18,7 +33,7 @@ const generateDraftLetter = async ({ resume, description }: inputTypes) => {
             model: 'gpt-3.5-turbo',
             messages: [{
                 role: 'user',
-                content: `Given the following resume: ${resume} and this job description: ${description}, generate a professional and impactful cover letter that highlights relevant skills and experiences.`,
+                content: getContent(prompt, resume, description),
             }],
             max_tokens: 800,
         });
