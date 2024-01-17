@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -69,6 +69,17 @@ export default function CoverLetter() {
   const [resume, setResume] = useState('')
   const [description, setDescription] = useState('')
   const [activePrompt, setActivePrompt] = useState('prompt1');
+  const [disableNextButton, setDisableNextButton] = useState(false);
+
+  useEffect(() => {
+    if (activeStep === 0) {
+      setDisableNextButton(resume.trim().length === 0)
+    } else if (activeStep === 1) {
+      setDisableNextButton(description.trim().length === 0)
+    } else {
+      setDisableNextButton(false)
+    }
+  }, [resume, description, activeStep])
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -125,6 +136,7 @@ export default function CoverLetter() {
                       variant="contained"
                       onClick={handleNext}
                       sx={{ mt: 3, ml: 1 }}
+                      disabled={disableNextButton}
                     >
                       {activeStep === steps.length - 1 ? 'Generate Letter' : 'Next'}
                     </Button>
