@@ -1,11 +1,7 @@
 import express, { Request, Response } from 'express';
 import generateDraftLetter from './generateLetter.ts';
 import dotenv from 'dotenv';
-interface inputTypes {
-  resume: string
-  description: string
-  prompt: string
-}
+import { inputTypes } from './interfaces.ts';
 
 dotenv.config();
 const app = express();

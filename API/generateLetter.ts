@@ -1,21 +1,14 @@
 import OpenAI from 'openai';
+import { inputTypes } from './interfaces';
 
-interface inputTypes {
-    resume: string
-    description: string
-    prompt: string
-}
-
-
-
-const getContent = (prompt: string, resume: string, jobDescription: string) => {
+const getContent = ({ resume, description, prompt }: inputTypes) => {
     const PromptObj: {
         [key: string]: string;
     } = {
-        prompt1: `Given the following resume: ${resume} and this job description: ${jobDescription}, generate a professional and impactful cover letter that highlights relevant skills and experiences.`,
-        prompt2: `Based on the resume: ${resume} and the job description: ${jobDescription}, create a compelling cover letter that demonstrates the candidate's fit for the role.`,
-        prompt3: `Considering the provided resume: ${resume} and the job description: ${jobDescription}, draft a persuasive cover letter that showcases the candidate's qualifications and enthusiasm for the position.`,
-        prompt4: `With the resume: ${resume} and the job description: ${jobDescription} in mind, write a convincing cover letter that effectively markets the candidate's abilities and suitability for the job.`
+        prompt1: `Given the following resume: ${resume} and this job description: ${description}, generate a professional and impactful cover letter that highlights relevant skills and experiences.`,
+        prompt2: `Based on the resume: ${resume} and the job description: ${description}, create a compelling cover letter that demonstrates the candidate's fit for the role.`,
+        prompt3: `Considering the provided resume: ${resume} and the job description: ${description}, draft a persuasive cover letter that showcases the candidate's qualifications and enthusiasm for the position.`,
+        prompt4: `With the resume: ${resume} and the job description: ${description} in mind, write a convincing cover letter that effectively markets the candidate's abilities and suitability for the job.`
     }
     return PromptObj[prompt];
 }
@@ -33,7 +26,7 @@ const generateDraftLetter = async ({ resume, description, prompt }: inputTypes) 
             model: 'gpt-3.5-turbo',
             messages: [{
                 role: 'user',
-                content: getContent(prompt, resume, description),
+                content: getContent({ resume, description, prompt }),
             }],
             max_tokens: 800,
         });
