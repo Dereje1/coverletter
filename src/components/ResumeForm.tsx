@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import FormDialog from './FormDialog';
+import FormDialog from './Dialogs/FormDialog';
+import WarningDialog from './Dialogs/WarningDialog';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -39,10 +40,14 @@ const removeFromLocalStorage = (resumeJSON: localResume) => {
   localStorage.setItem('resumes', JSON.stringify(updatedResumes))
 }
 
+const warningDialogInitial: localResume | null = null
+const localStorageResumesInitial:localResume[] = []
 
 export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
   const [openFormDialog, setOpenFormDialog] = useState(false);
-  const [localStorageResumes, setLocalStorageResumes] = useState([]);
+  const [localStorageResumes, setLocalStorageResumes] = useState(localStorageResumesInitial);
+  const [activeResumeId, setActiveResumeId] = useState(0)
+  const [warningDialogContents, setWarningDialogContents] = useState(warningDialogInitial);
 
   useEffect(() => {
     setLocalStorageResumes(getFromLocalStorage());
@@ -64,6 +69,18 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
           setLocalStorageResumes(getFromLocalStorage());
         }}
       />
+      <WarningDialog
+        open={Boolean(warningDialogContents)}
+        handleClose={() => setWarningDialogContents(null)}
+        deleteResume={() => {
+          if (warningDialogContents) {
+            removeFromLocalStorage(warningDialogContents)
+          }
+          setLocalStorageResumes(getFromLocalStorage())
+          setWarningDialogContents(null)
+        }}
+        localResume={warningDialogContents}
+      />
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h6" gutterBottom>
           Paste Resume
@@ -76,19 +93,25 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
                   <Chip
                     label={r.name}
                     onDelete={() => {
-                      removeFromLocalStorage(r)
-                      setLocalStorageResumes(getFromLocalStorage())
+                      setWarningDialogContents(r)
                     }}
-                    onClick={() => updateResume(r.resume)}
+                    onClick={() => {
+                      updateResume(r.resume)
+                      setActiveResumeId(r.id)
+                    }}
                     key={r.id}
                     color='primary'
-                    variant='outlined'
+                    variant={activeResumeId === r.id ? 'filled' : 'outlined'}
                   />
                 )
               })
             }
           </Stack>
-          <IconButton aria-label="clear" color='error' disabled={!resume.length} onClick={() => updateResume('')}>
+          <IconButton
+            aria-label="clear"
+            color='error' disabled={!resume.length}
+            onClick={() => { updateResume(''); setActiveResumeId(0) }}
+          >
             <NotInterestedIcon />
           </IconButton>
           <IconButton aria-label="save" color='primary' disabled={!resume.length} onClick={() => setOpenFormDialog(true)}>
@@ -107,7 +130,7 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
         multiline
         minRows={15}
         maxRows={15}
-        onChange={(e) => updateResume(e.target.value)}
+        onChange={(e) => { updateResume(e.target.value); setActiveResumeId(0) }}
         value={resume}
       />
     </React.Fragment>
