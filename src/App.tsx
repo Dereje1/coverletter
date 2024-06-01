@@ -9,12 +9,15 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import KeyIcon from '@mui/icons-material/Key';
 import ResumeForm from './components/ResumeForm';
 import DescriptionForm from './components/DescriptionForm';
 import PromptPicker from './components/PromptPicker';
 import Review from './components/Review';
 import GeneratedLetter from './components/GeneratedLetter';
 import PromptObj from './components/PromptTypes';
+import APIKeyDialog from './components/Dialogs/APIKeyDialog';
 
 function Copyright() {
   return (
@@ -70,6 +73,7 @@ export default function App() {
   const [description, setDescription] = useState('')
   const [activePrompt, setActivePrompt] = useState('prompt1');
   const [disableNextButton, setDisableNextButton] = useState(false);
+  const [showAPIKeyDIalog, setShowAPIKeyDIalog] = useState(false);
 
   useEffect(() => {
     if (activeStep === 0) {
@@ -94,9 +98,14 @@ export default function App() {
       <CssBaseline />
       <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 1, md: 2 }, p: { xs: 1, md: 1 } }}>
-          <Typography component="h1" variant="h5" align="center">
-            Follow steps below to generate a cover letter
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'self-start' }}>
+            <Typography component="h1" variant="h5" align="center">
+              Follow steps below to generate a cover letter
+            </Typography>
+            <IconButton aria-label="save" color='primary' onClick={() => setShowAPIKeyDIalog(true)}>
+              <KeyIcon />
+            </IconButton>
+          </Box>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
               <Step key={label}>
@@ -147,6 +156,10 @@ export default function App() {
         </Paper>
         <Copyright />
       </Container>
+      {showAPIKeyDIalog && <APIKeyDialog
+        handleClose={() => setShowAPIKeyDIalog(false)}
+        open={showAPIKeyDIalog}
+      />}
     </React.Fragment>
   );
 }
