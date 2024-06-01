@@ -23,7 +23,7 @@ const generateDraftLetter = async ({ resume, description, prompt }: inputTypes) 
         });
 
         const draftResponse = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-4o',
             messages: [{
                 role: 'user',
                 content: getContent({ resume, description, prompt }),
