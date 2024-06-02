@@ -1,7 +1,14 @@
 import OpenAI from 'openai';
 import { inputTypes } from './interfaces';
 
-const getContent = ({ resume, description, prompt }: inputTypes) => {
+const getapiKey = (api_key: string | null) => {
+    // use client api key first... if not available use env file
+    if (api_key) return api_key
+    if (process.env.OPENAI_API_KEY) return process.env.OPENAI_API_KEY
+    return null;
+}
+
+const getContent = ({ resume, description, prompt, }: Omit<inputTypes, 'api_key'>) => {
     const PromptObj: {
         [key: string]: string;
     } = {
@@ -13,14 +20,19 @@ const getContent = ({ resume, description, prompt }: inputTypes) => {
     return PromptObj[prompt];
 }
 
-const generateDraftLetter = async ({ resume, description, prompt }: inputTypes) => {
+const generateDraftLetter = async ({ resume, description, prompt, api_key }: inputTypes) => {
     try {
         if (!description.trim().length || !resume.length) {
             throw new Error(`Missing Resume or Description !!`);
         }
-        const openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
-        });
+
+        const apiKey = getapiKey(api_key);
+
+        if (!apiKey) {
+            throw new Error(`Missing API key!!`);
+        }
+
+        const openai = new OpenAI({ apiKey });
 
         const draftResponse = await openai.chat.completions.create({
             model: 'gpt-4o',

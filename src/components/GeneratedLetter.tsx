@@ -12,6 +12,7 @@ interface GeneratedLetterProps {
     resume: string
     description: string
     activePrompt: string
+    activeKey: string | null
 }
 
 const downloadDocument = (letter: string) => {
@@ -35,11 +36,11 @@ const copyToClipboard = (letter: string) => {
       .catch(err => console.error('Could not copy text: ', err));
 };
 
-export default function GeneratedLetter({ resume, description, activePrompt }: GeneratedLetterProps) {
+export default function GeneratedLetter({ resume, description, activePrompt, activeKey }: GeneratedLetterProps) {
     const [letter, setLetter] = useState(null)
 
     const getGeneratedData = async () => {
-        const { data } = await axios.post('/api', { resume, description, prompt: activePrompt })
+        const { data } = await axios.post('/api', { resume, description, prompt: activePrompt, api_key: activeKey })
         setLetter(data.letter)
     }
 

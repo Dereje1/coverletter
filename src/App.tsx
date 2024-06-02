@@ -109,7 +109,7 @@ export default function App() {
     const api_keys = getFromLocalStorage('api_keys');
     const active = api_keys.filter((a: api_keys) => a.isActive)
     if (active.length) {
-      setActiveKey(`${active[0].key.slice(0, 5)}.........${active[0].key.slice(-5)}`);
+      setActiveKey(active[0].key);
       return
     }
     setActiveKey('')
@@ -125,7 +125,7 @@ export default function App() {
               <KeyIcon />
             </IconButton>
             <Typography component="h1" variant="caption" align="center">
-              {`Active Key: ${activeKey || '🚫'}`}
+              {`Active OpenAI API Key: ${activeKey ?  `${activeKey.slice(0, 5)}.........${activeKey.slice(-5)}` :  '🚫'}`}
             </Typography>
           </Box>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
@@ -140,6 +140,7 @@ export default function App() {
               resume={resume}
               description={description}
               activePrompt={activePrompt}
+              activeKey={activeKey || null}
             /> : (
               <React.Fragment>
                 {getStepContent({

@@ -8,8 +8,8 @@ const app = express();
 app.use(express.json());
 
 app.post('/api', async (request: Request, response: Response) => {
-  const { resume, description, prompt }: inputTypes = request.body
-  const generatedLetter = await generateDraftLetter({ resume, description, prompt })
+  const { resume, description, prompt, api_key }: inputTypes = request.body
+  const generatedLetter = await generateDraftLetter({ resume, description, prompt, api_key })
   response.json({
     resume,
     description,
