@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "node ./api_build/index",
     "client": "vite",
-    "build": "tsc && vite build",
+    "build_client": "tsc -p ./client && vite build",
+    "build_api": "tsc -p ./API",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "api": "nodemon --esm ./API/index.ts",
@@ -35,7 +37,8 @@
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "nodemon": "^3.0.2",
+    "nodemon": "^3.1.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   }

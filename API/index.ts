@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
-import generateDraftLetter from './generateLetter.ts';
+import generateDraftLetter from './generateLetter.js'; // <-- strange node-ts unable to run with the ts extension ??? investigate
 import dotenv from 'dotenv';
-import { inputTypes } from './interfaces.ts';
+import { inputTypes } from './interfaces';
 
 dotenv.config();
 const app = express();
