@@ -11,7 +11,7 @@ This project is a cover letter generator leveraging OpenAI's API. It's designed 
 | Node.js /  npm (comes with Node)  | `~ ^18.3.0` / `~^8.19.3` |
 | Git | `~ ^2` |
 
-This project also requires an [OpenAI API key](https://platform.openai.com/docs/quickstart/step-2-setup-your-api-key). Please note that the application currently runs locally.
+This project also requires an [OpenAI API key](https://platform.openai.com/docs/quickstart/step-2-setup-your-api-key).
 
 ### Steps
 1. Clone the repository: `git clone https://github.com/Dereje1/coverletter.git`
