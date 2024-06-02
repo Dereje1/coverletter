@@ -8,6 +8,7 @@ import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import { getFromLocalStorage, saveToLocalStorage, removeFromLocalStorage } from '../utils/localstorage';
 
 interface ResumeFormProps {
   updateResume: (r: string) => void
@@ -20,26 +21,6 @@ type localResume = {
   id: number
 }
 
-const getFromLocalStorage = () => {
-  const inLocalStorage = localStorage.getItem('resumes');
-  if (inLocalStorage) {
-    const localResumes = JSON.parse(inLocalStorage);
-    return localResumes;
-  }
-  return []
-}
-
-const saveToLocalStorage = (resumeJSON: localResume) => {
-  const inLocalStorage = getFromLocalStorage();
-  localStorage.setItem('resumes', JSON.stringify([...inLocalStorage, resumeJSON]))
-}
-
-const removeFromLocalStorage = (resumeJSON: localResume) => {
-  const inLocalStorage = getFromLocalStorage();
-  const updatedResumes = inLocalStorage.filter((r: localResume) => r.id !== resumeJSON.id)
-  localStorage.setItem('resumes', JSON.stringify(updatedResumes))
-}
-
 const warningDialogInitial: localResume | null = null
 const localStorageResumesInitial:localResume[] = []
 
@@ -50,7 +31,7 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
   const [warningDialogContents, setWarningDialogContents] = useState(warningDialogInitial);
 
   useEffect(() => {
-    setLocalStorageResumes(getFromLocalStorage());
+    setLocalStorageResumes(getFromLocalStorage('resumes'));
   }, [])
 
 
@@ -60,13 +41,13 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
         open={openFormDialog}
         handleClose={() => setOpenFormDialog(false)}
         saveResume={(resumeName) => {
-          saveToLocalStorage({
+          saveToLocalStorage('resumes',{
             name: resumeName,
             resume,
             id: Date.now()
           })
           setOpenFormDialog(false)
-          setLocalStorageResumes(getFromLocalStorage());
+          setLocalStorageResumes(getFromLocalStorage('resumes'));
         }}
       />
       <WarningDialog
@@ -74,9 +55,9 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
         handleClose={() => setWarningDialogContents(null)}
         deleteResume={() => {
           if (warningDialogContents) {
-            removeFromLocalStorage(warningDialogContents)
+            removeFromLocalStorage('resumes', warningDialogContents)
           }
-          setLocalStorageResumes(getFromLocalStorage())
+          setLocalStorageResumes(getFromLocalStorage('resumes'))
           setWarningDialogContents(null)
         }}
         localResume={warningDialogContents}

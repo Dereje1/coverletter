@@ -18,6 +18,7 @@ import Review from './components/Review';
 import GeneratedLetter from './components/GeneratedLetter';
 import PromptObj from './components/PromptTypes';
 import APIKeyDialog from './components/Dialogs/APIKeyDialog';
+import { getFromLocalStorage } from './utils/localstorage'
 
 function Copyright() {
   return (
@@ -67,6 +68,12 @@ function getStepContent({
   }
 }
 
+type api_keys = {
+  key: string
+  isActive: boolean
+  id: number
+}
+
 export default function App() {
   const [activeStep, setActiveStep] = useState(0);
   const [resume, setResume] = useState('')
@@ -74,6 +81,7 @@ export default function App() {
   const [activePrompt, setActivePrompt] = useState('prompt1');
   const [disableNextButton, setDisableNextButton] = useState(false);
   const [showAPIKeyDIalog, setShowAPIKeyDIalog] = useState(false);
+  const [activeKey, setActiveKey] = useState('');
 
   useEffect(() => {
     if (activeStep === 0) {
@@ -89,22 +97,36 @@ export default function App() {
     setActiveStep(activeStep + 1);
   };
 
+  useEffect(() => {
+    updateActiveKey()
+  }, [])
+
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  const updateActiveKey = () => {
+    const api_keys = getFromLocalStorage('api_keys');
+    const active = api_keys.filter((a: api_keys) => a.isActive)
+    if (active.length) {
+      setActiveKey(`${active[0].key.slice(0, 5)}.........${active[0].key.slice(-5)}`);
+      return
+    }
+    setActiveKey('')
+  }
 
   return (
     <React.Fragment>
       <CssBaseline />
       <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 1, md: 2 }, p: { xs: 1, md: 1 } }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'self-start' }}>
-            <Typography component="h1" variant="h5" align="center">
-              Follow steps below to generate a cover letter
-            </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <IconButton aria-label="save" color='primary' onClick={() => setShowAPIKeyDIalog(true)}>
               <KeyIcon />
             </IconButton>
+            <Typography component="h1" variant="caption" align="center">
+              {`Active Key: ${activeKey || '🚫'}`}
+            </Typography>
           </Box>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
@@ -159,6 +181,7 @@ export default function App() {
       {showAPIKeyDIalog && <APIKeyDialog
         handleClose={() => setShowAPIKeyDIalog(false)}
         open={showAPIKeyDIalog}
+        updateActiveKey={updateActiveKey}
       />}
     </React.Fragment>
   );

@@ -12,10 +12,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { getFromLocalStorage, saveToLocalStorage, removeFromLocalStorage } from '../../utils/localstorage';
 
 interface APIKeyDialogProps {
     handleClose: () => void
     open: boolean
+    updateActiveKey: () => void
 }
 
 type api_keys = {
@@ -24,30 +26,9 @@ type api_keys = {
     id: number
 }
 
-const getFromLocalStorage = () => {
-    const inLocalStorage = localStorage.getItem('api_keys');
-    if (inLocalStorage) {
-        const keys = JSON.parse(inLocalStorage);
-        return keys;
-    }
-    return []
-}
-
-const saveToLocalStorage = (api_key: api_keys) => {
-    const inLocalStorage = getFromLocalStorage();
-    localStorage.setItem('api_keys', JSON.stringify([...inLocalStorage, api_key]))
-    updateLocalStorage(api_key.id)
-}
-
-const removeFromLocalStorage = (api_key: api_keys) => {
-    const inLocalStorage = getFromLocalStorage();
-    const updatedKeys = inLocalStorage.filter((a: api_keys) => a.id !== api_key.id)
-    localStorage.setItem('api_keys', JSON.stringify(updatedKeys))
-}
-
 // makes api key active
 const updateLocalStorage = (api_key_id: number) => {
-    const inLocalStorage = getFromLocalStorage();
+    const inLocalStorage = getFromLocalStorage('api_keys');
     const updatedKeys = inLocalStorage.map((a: api_keys) => ({
         ...a,
         isActive: a.id === api_key_id
@@ -57,13 +38,18 @@ const updateLocalStorage = (api_key_id: number) => {
 
 const localStorageKeysInitial: api_keys[] = []
 
-export default function APIKeyDialog({ open, handleClose }: APIKeyDialogProps) {
+export default function APIKeyDialog({ open, handleClose, updateActiveKey }: APIKeyDialogProps) {
     const [api_key, setapi_key] = useState('');
     const [stored_api_keys, setStored_api_keys] = useState(localStorageKeysInitial);
 
     useEffect(() => {
-        setStored_api_keys(getFromLocalStorage());
+        setStored_api_keys(getFromLocalStorage('api_keys'));
     }, [])
+
+    const getActiveKey = () =>{
+       const active = stored_api_keys.filter(a => a.isActive)
+       return active.length ? active[0].id : null
+    }
 
     return (
         <React.Fragment>
@@ -73,7 +59,7 @@ export default function APIKeyDialog({ open, handleClose }: APIKeyDialogProps) {
             >
                 <DialogTitle>Manage OpenAI API keys</DialogTitle>
                 <DialogContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 350, height: 40, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 350, height: 40, alignItems: 'flex-end' }}>
                         <TextField
                             autoFocus
                             required
@@ -89,9 +75,12 @@ export default function APIKeyDialog({ open, handleClose }: APIKeyDialogProps) {
                         />
                         <IconButton
                             onClick={() => {
-                                saveToLocalStorage({ key: api_key, isActive: false, id: Date.now() })
-                                setStored_api_keys(getFromLocalStorage());
+                                const id = Date.now()
+                                saveToLocalStorage('api_keys', { key: api_key, isActive: false, id })
+                                updateLocalStorage(id)
+                                setStored_api_keys(getFromLocalStorage('api_keys'));
                                 setapi_key('')
+                                updateActiveKey()
                             }}
                             color='success'
                             disabled={!api_key.trim().length}
@@ -106,7 +95,7 @@ export default function APIKeyDialog({ open, handleClose }: APIKeyDialogProps) {
                             <FormLabel id="demo-radio-buttons-group-label">Stored Keys</FormLabel>
                             <RadioGroup
                                 aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue={() => stored_api_keys.filter(a => a.isActive)[0].id}
+                                defaultValue={getActiveKey}
                                 name="radio-buttons-group"
                             >
                                 {
@@ -119,16 +108,18 @@ export default function APIKeyDialog({ open, handleClose }: APIKeyDialogProps) {
                                                         <Radio
                                                             onClick={() => {
                                                                 updateLocalStorage(api_key.id)
-                                                                setStored_api_keys(getFromLocalStorage());
+                                                                setStored_api_keys(getFromLocalStorage('api_keys'));
+                                                                updateActiveKey();
                                                             }}
                                                             checked={api_key.isActive}
                                                         />
                                                     }
-                                                    label={api_key.key} />
+                                                    label={`${api_key.key.slice(0,5)}.........${api_key.key.slice(-5)}`} />
                                                 <IconButton
                                                     onClick={() => {
-                                                        removeFromLocalStorage(api_key)
-                                                        setStored_api_keys(getFromLocalStorage());
+                                                        removeFromLocalStorage('api_keys', api_key)
+                                                        setStored_api_keys(getFromLocalStorage('api_keys'));
+                                                        updateActiveKey()
                                                     }}
                                                     color='error'
                                                 >
