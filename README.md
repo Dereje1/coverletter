@@ -1,7 +1,3 @@
-Sure, here is the updated README file with the new changes:
-
----
-
 # Cover Letter Generator
 
 ## Overview
