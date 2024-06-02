@@ -12,11 +12,11 @@ const getContent = ({ resume, description, prompt, }: Omit<inputTypes, 'api_key'
     const PromptObj: {
         [key: string]: string;
     } = {
-        prompt1: `Given the following resume: ${resume} and this job description: ${description}, generate a professional and impactful cover letter that highlights relevant skills and experiences.`,
-        prompt2: `Based on the resume: ${resume} and the job description: ${description}, create a compelling cover letter that demonstrates the candidate's fit for the role.`,
-        prompt3: `Considering the provided resume: ${resume} and the job description: ${description}, draft a persuasive cover letter that showcases the candidate's qualifications and enthusiasm for the position.`,
-        prompt4: `With the resume: ${resume} and the job description: ${description} in mind, write a convincing cover letter that effectively markets the candidate's abilities and suitability for the job.`
-    }
+        prompt1: `Using the following resume: ${resume} and the job description: ${description}, generate a professional and impactful cover letter that highlights the most relevant skills and experiences. Ensure the letter is well-structured, engaging, and tailored to the job requirements. Please return the response in plain text without any markdown formatting.`,
+        prompt2: `Based on the provided resume: ${resume} and the job description: ${description}, create a compelling cover letter that clearly demonstrates the candidate's strong fit for the role. Highlight key achievements and qualifications that align with the job's needs, and convey enthusiasm for the opportunity. Please return the response in plain text without any markdown formatting.`,
+        prompt3: `Given the resume: ${resume} and the job description: ${description}, draft a persuasive cover letter that effectively showcases the candidate's qualifications and genuine enthusiasm for the position. Focus on specific accomplishments and experiences that make the candidate an ideal fit for the role. Please return the response in plain text without any markdown formatting.`,
+        prompt4: `Taking into account the resume: ${resume} and the job description: ${description}, write a convincing cover letter that markets the candidate's abilities and suitability for the job. Highlight the most relevant experiences and skills, and explain why the candidate is uniquely qualified for the position. Please return the response in plain text without any markdown formatting.`
+    };
     return PromptObj[prompt];
 }
 

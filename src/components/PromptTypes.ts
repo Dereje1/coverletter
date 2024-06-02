@@ -4,7 +4,7 @@ type PromptObjectType = {
 
 const PromptObj: PromptObjectType = {
     prompt1: {
-        name: "Straightforward",
+        name: "Professional and Impactful",
         description: "This prompt focuses on generating a professional cover letter that highlights relevant skills and experiences. It's a good choice if you want a more formal and straightforward cover letter.",
     },
     prompt2: {
