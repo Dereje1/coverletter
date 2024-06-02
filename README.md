@@ -1,3 +1,7 @@
+Sure, here is the updated README file with the new changes:
+
+---
+
 # Cover Letter Generator
 
 ## Overview
@@ -23,7 +27,14 @@ This project also requires an [OpenAI API key](https://platform.openai.com/docs/
 ## Usage
 After starting the application, follow the provided steps to input your resume, job description, and the type of prompt you want to use. The application will then generate a personalized cover letter based on your input.
 
-You can save your resumes in the local storage for future use, allowing you to manage and reuse multiple resumes easily. Once your cover letter is generated, you can copy it directly to your clipboard with a single click, making it easy to paste and share your cover letter. Additionally, you can download your generated cover letter as a clean PDF file, which is useful for saving, printing, or emailing the cover letter as an attachment.
+### API Key Management
+Users can now save several OpenAI API keys in their browser's local storage and send them to the backend. You also have the option to save your API keys in a `.env` file. The backend does not persist your API keys; it only uses them to send requests to OpenAI.
+
+### Resume Management
+You can save your resumes in the local storage for future use, allowing you to manage and reuse multiple resumes easily. 
+
+### Generating and Using Cover Letters
+Once your cover letter is generated, you can copy it directly to your clipboard with a single click, making it easy to paste and share your cover letter. Additionally, you can download your generated cover letter as a clean PDF file, which is useful for saving, printing, or emailing the cover letter as an attachment.
 
 ## Contributing
 Contributions are welcome! Please ensure to read the contributing guidelines before making any changes.
