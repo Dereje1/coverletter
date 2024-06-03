@@ -13,6 +13,8 @@ dist-ssr
 *.local
 .env
 api_build
+.build
+.serverless
 
 # Editor directories and files
 .vscode/*

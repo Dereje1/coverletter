@@ -1,0 +1,45 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+# rate(6 hours)
+
+service: coverletter-api
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+functions:
+  app:
+    handler: src/handler.index
+    events:
+      - http:
+          path: /
+          method: any
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+custom:
+  apigwBinary:
+    types:
+      - '*/*'
+  serverless-offline:
+    noPrependStageInUrl: true
+
+package:
+  exclude:
+    - node_modules/**
+    - public/**
+
