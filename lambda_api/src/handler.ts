@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { inputTypes } from './interfaces';
+import generateDraftLetter from './generateLetter';
 
-const responseUtil = (message: string, statusCode: number) => (
+const responseUtil = (letter: string | null, statusCode: number) => (
   {
     statusCode,
     headers: {
@@ -9,7 +11,7 @@ const responseUtil = (message: string, statusCode: number) => (
     },
     body: JSON.stringify(
       {
-        message,
+        letter,
       },
       null,
       2
@@ -19,14 +21,11 @@ const responseUtil = (message: string, statusCode: number) => (
 
 
 
-const url = 'https://api.github.com/users/Dereje1';
 export const index = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
-        // fetch is available with Node.js 18
-        console.log(event)
-        const res = await fetch(url);
-        const message = await res.json();
-        return responseUtil(message, res.status)
+      const { resume, description, prompt, api_key }: inputTypes  = JSON.parse(event.body || '{}');
+      const letter = await generateDraftLetter({ resume, description, prompt, api_key })
+      return responseUtil(letter, 200)
 
     } catch (err) {
         console.log(err);

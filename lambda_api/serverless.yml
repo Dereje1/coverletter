@@ -11,20 +11,19 @@
 #
 # Happy Coding!
 
-# rate(6 hours)
-
 service: coverletter-api
 provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
+  timeout: 120
 
 functions:
   app:
     handler: src/handler.index
     events:
       - http:
-          path: /
+          path: /api
           method: any
 
 plugins:
