@@ -1,0 +1,5 @@
+{
+    "watch": ["build"],
+    "ext": "js,json",
+    "exec": "serverless offline"
+  }

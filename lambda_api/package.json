@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start:watch": "tsc --watch",
+    "start:offline": "nodemon",
+    "dev": "concurrently \"npm run start:watch\" \"npm run start:offline\""
   },
   "keywords": [],
   "author": "",
@@ -13,9 +16,10 @@
     "@types/aws-lambda": "^8.10.138",
     "@types/node": "^20.14.0",
     "serverless-offline": "^13.6.0",
-    "serverless-plugin-typescript": "^2.1.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15"
   },
   "dependencies": {
     "openai": "^4.47.3"

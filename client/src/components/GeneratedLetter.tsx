@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 interface GeneratedLetterProps {
     resume: string
     description: string
@@ -40,7 +40,7 @@ export default function GeneratedLetter({ resume, description, activePrompt, act
     const [letter, setLetter] = useState(null)
 
     const getGeneratedData = async () => {
-        const { data } = await axios.post('/api', { resume, description, prompt: activePrompt, api_key: activeKey })
+        const { data } = await axios.post(API_BASE_URL, { resume, description, prompt: activePrompt, api_key: activeKey })
         setLetter(data.letter)
     }
 

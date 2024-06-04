@@ -12,9 +12,14 @@ dist
 dist-ssr
 *.local
 .env
+.env.development
+.env.production
 api_build
 .build
 .serverless
+project.zip
+build
+notes
 
 # Editor directories and files
 .vscode/*
