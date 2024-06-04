@@ -8,17 +8,60 @@ This project is a cover letter generator leveraging OpenAI's API. It's designed 
 ### Prerequisites
 | Prerequisite                                | Version |
 | ------------------------------------------- | ------- |
-| Node.js /  npm (comes with Node)  | `~ ^18.3.0` / `~^8.19.3` |
-| Git | `~ ^2` |
+| Node.js / npm (comes with Node)             | `~ ^18.3.0` / `~^8.19.3` |
+| Git                                         | `~ ^2` |
 
 This project also requires an [OpenAI API key](https://platform.openai.com/docs/quickstart/step-2-setup-your-api-key).
 
 ### Steps
-1. Clone the repository: `git clone https://github.com/Dereje1/coverletter.git`
-2. Navigate to the project directory: `cd coverletter`
-3. Install the required packages: `npm install`
-4. Create a `.env` file in the root of the project and add the following content: `OPENAI_API_KEY='your-api-key'`
-5. Run the app: `npm run dev`
+1. Clone the repository: 
+   ```bash
+   git clone https://github.com/Dereje1/coverletter.git
+   ```
+2. Navigate to the project directory: 
+   ```bash
+   cd coverletter
+   ```
+
+### Setting Up the API
+1. Navigate to the API directory: 
+   ```bash
+   cd lambda_api
+   ```
+2. Install the required packages: 
+   ```bash
+   npm install
+   ```
+3. Optionally create a `.env` file in the `lambda_api` directory and add the following content:
+   ```env
+   OPENAI_API_KEY='your-api-key'
+   ```
+4. Build the project and start the API locally using Serverless Offline and `tsc-watch`: 
+   ```bash
+   npm run dev
+   ```
+
+**Note:** The `npm run dev` script is configured in your `package.json` to run both `tsc-watch` and `serverless offline` concurrently.
+
+
+### Setting Up the Client
+1. Navigate to the client directory:
+   ```bash
+   cd client
+   ```
+2. Install the required packages: 
+   ```bash
+   npm install
+   ```
+3. Create a `.env.development` file in the `client` directory and add the following content:
+   ```env
+   VITE_API_URL=/api
+   ```
+4. Start the client locally using Vite:
+   ```bash
+   npm run dev
+   ```
+**Note:** Run the client setup in a separate terminal to keep the client and API servers running concurrently.
 
 ## Usage
 After starting the application, follow the provided steps to input your resume, job description, and the type of prompt you want to use. The application will then generate a personalized cover letter based on your input.

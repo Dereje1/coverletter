@@ -19,7 +19,7 @@ api_build
 .serverless
 project.zip
 build
-notes
+notes.md
 
 # Editor directories and files
 .vscode/*
