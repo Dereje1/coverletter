@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FormDialog from './Dialogs/FormDialog';
 import WarningDialog from './Dialogs/WarningDialog';
-import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
@@ -22,7 +21,7 @@ type localResume = {
 }
 
 const warningDialogInitial: localResume | null = null
-const localStorageResumesInitial:localResume[] = []
+const localStorageResumesInitial: localResume[] = []
 
 export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
   const [openFormDialog, setOpenFormDialog] = useState(false);
@@ -41,7 +40,7 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
         open={openFormDialog}
         handleClose={() => setOpenFormDialog(false)}
         saveResume={(resumeName) => {
-          saveToLocalStorage('resumes',{
+          saveToLocalStorage('resumes', {
             name: resumeName,
             resume,
             id: Date.now()
@@ -62,50 +61,45 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
         }}
         localResume={warningDialogContents}
       />
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h6" gutterBottom>
-          Paste Resume
-        </Typography>
-        <div style={{ display: 'flex' }}>
-          <Stack direction="row" spacing={1} sx={{ marginRight: 3 }}>
-            {
-              localStorageResumes.map((r: localResume) => {
-                return (
-                  <Chip
-                    label={r.name}
-                    onDelete={() => {
-                      setWarningDialogContents(r)
-                    }}
-                    onClick={() => {
-                      updateResume(r.resume)
-                      setActiveResumeId(r.id)
-                    }}
-                    key={r.id}
-                    color='primary'
-                    variant={activeResumeId === r.id ? 'filled' : 'outlined'}
-                  />
-                )
-              })
-            }
-          </Stack>
-          <IconButton
-            aria-label="clear"
-            color='error' disabled={!resume.length}
-            onClick={() => { updateResume(''); setActiveResumeId(0) }}
-          >
-            <NotInterestedIcon />
-          </IconButton>
-          <IconButton aria-label="save" color='primary' disabled={!resume.length} onClick={() => setOpenFormDialog(true)}>
-            <SaveOutlinedIcon />
-          </IconButton>
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Stack direction="row" spacing={1} sx={{ marginRight: 3 }}>
+          {
+            localStorageResumes.map((r: localResume) => {
+              return (
+                <Chip
+                  label={r.name}
+                  onDelete={() => {
+                    setWarningDialogContents(r)
+                  }}
+                  onClick={() => {
+                    updateResume(r.resume)
+                    setActiveResumeId(r.id)
+                  }}
+                  key={r.id}
+                  color='primary'
+                  variant={activeResumeId === r.id ? 'filled' : 'outlined'}
+                />
+              )
+            })
+          }
+        </Stack>
+        <IconButton
+          aria-label="clear"
+          color='error' disabled={!resume.length}
+          onClick={() => { updateResume(''); setActiveResumeId(0) }}
+        >
+          <NotInterestedIcon />
+        </IconButton>
+        <IconButton aria-label="save" color='primary' disabled={!resume.length} onClick={() => setOpenFormDialog(true)}>
+          <SaveOutlinedIcon />
+        </IconButton>
       </div>
 
       <TextField
         required
         id="resume"
         name="resume"
-        label="Resume"
+        label="Paste your resume here"
         fullWidth
         variant="outlined"
         multiline

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
 interface DescriptionFormProps {
@@ -10,14 +9,11 @@ interface DescriptionFormProps {
 export default function DescriptionForm({ updateDescription, description }: DescriptionFormProps) {
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Paste Job Description
-      </Typography>
       <TextField
         required
         id="description"
         name="description"
-        label="Description"
+        label="Paste the job description here"
         fullWidth
         variant="outlined"
         multiline

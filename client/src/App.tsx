@@ -128,8 +128,11 @@ export default function App() {
       <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 1, md: 2 }, p: { xs: 1, md: 1 } }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <IconButton aria-label="save" color='primary' onClick={() => setShowAPIKeyDIalog(true)}>
-              <KeyIcon />
+            <IconButton
+              aria-label="save"
+              size='large'
+              onClick={() => setShowAPIKeyDIalog(true)}>
+              <KeyIcon color={activeKey ? 'success' : 'error'} sx={{ fontSize: 40 }} />
             </IconButton>
             <Typography component="h1" variant="caption" align="center">
               {`Active OpenAI API Key: ${activeKey ? `${activeKey.slice(0, 5)}.........${activeKey.slice(-5)}` : '🚫'}`}
