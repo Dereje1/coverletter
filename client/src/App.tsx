@@ -24,7 +24,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://dereje1.github.io/Portfolio-V3/">
+      <Link color="inherit" href="https://github.com/Dereje1/coverletter">
         Dereje Getahun
       </Link>{' '}
       {new Date().getFullYear()}
@@ -115,6 +115,13 @@ export default function App() {
     setActiveKey('')
   }
 
+  const refresh = () => {
+    setResume('');
+    setDescription('');
+    setActivePrompt('prompt1');
+    setActiveStep(0);
+  }
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -125,7 +132,7 @@ export default function App() {
               <KeyIcon />
             </IconButton>
             <Typography component="h1" variant="caption" align="center">
-              {`Active OpenAI API Key: ${activeKey ?  `${activeKey.slice(0, 5)}.........${activeKey.slice(-5)}` :  '🚫'}`}
+              {`Active OpenAI API Key: ${activeKey ? `${activeKey.slice(0, 5)}.........${activeKey.slice(-5)}` : '🚫'}`}
             </Typography>
           </Box>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
@@ -141,6 +148,8 @@ export default function App() {
               description={description}
               activePrompt={activePrompt}
               activeKey={activeKey || null}
+              editInputs={() => setActiveStep(0)}
+              refresh={refresh}
             /> : (
               <React.Fragment>
                 {getStepContent({
