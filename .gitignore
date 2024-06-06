@@ -21,6 +21,7 @@ project.zip
 build
 notes.md
 *.pem
+deploy.sh
 
 # Editor directories and files
 .vscode/*

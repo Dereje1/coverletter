@@ -61,7 +61,7 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
             >
                 <DialogTitle>Manage OpenAI API keys</DialogTitle>
                 <DialogContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 350, height: 40, alignItems: 'flex-end' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 350, height: 50, alignItems: 'flex-end' }}>
                         <TextField
                             autoFocus
                             required
@@ -123,7 +123,7 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
                                                             checked={api_key.isActive}
                                                         />
                                                     }
-                                                    label={`${api_key.key.slice(0, 5)}.........${api_key.key.slice(-5)}`} />
+                                                    label={api_key.key} />
                                                 <IconButton
                                                     onClick={() => {
                                                         removeFromLocalStorage('api_keys', api_key)

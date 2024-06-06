@@ -32,11 +32,21 @@ This project also requires an [OpenAI API key](https://platform.openai.com/docs/
    ```bash
    npm install
    ```
-3. Optionally create a `.env` file in the `lambda_api` directory and add the following content:
+3. Generate your own RSA key pair for encryption:
+   ```bash
+   openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+   openssl rsa -pubout -in private_key.pem -out public_key.pem
+   ```
+4. Create a `.env` file in the `lambda_api` directory and add the following content:
    ```env
    OPENAI_API_KEY='your-api-key'
+   PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+   YOUR_PRIVATE_KEY_HERE
+   -----END PRIVATE KEY-----"
    ```
-4. Build the project and start the API locally using Serverless Offline and `tsc-watch`: 
+   **Note:** The private key is mandatory and must be stored securely. The OpenAI API key is optional and serves as a fallback if the client does not send an encrypted key.
+
+5. Build the project and start the API locally using Serverless Offline and `tsc-watch`: 
    ```bash
    npm run dev
    ```
@@ -56,6 +66,9 @@ This project also requires an [OpenAI API key](https://platform.openai.com/docs/
 3. Create a `.env.development` file in the `client` directory and add the following content:
    ```env
    VITE_API_URL=/api
+   VITE_APP_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+   YOUR_PUBLIC_KEY_HERE
+   -----END PUBLIC KEY-----"
    ```
 4. Start the client locally using Vite:
    ```bash
