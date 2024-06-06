@@ -1,9 +1,19 @@
 import OpenAI from 'openai';
+import crypto from 'crypto';
 import { inputTypes } from './interfaces';
+
+const decryptApiKey = (encryptedApiKey: string | null): string | null => {
+    const privateKey = process.env.PRIVATE_KEY ? crypto.createPrivateKey(process.env.PRIVATE_KEY) : null;
+    if (!privateKey || !encryptedApiKey) return null;
+    const buffer = Buffer.from(encryptedApiKey, 'base64');
+    const decrypted = crypto.privateDecrypt(privateKey, buffer);
+    return decrypted.toString('utf-8');
+};
 
 const getapiKey = (api_key: string | null) => {
     // use client api key first... if not available use env file
-    if (api_key) return api_key
+    const clientApiKey = decryptApiKey(api_key);
+    if (clientApiKey) return clientApiKey
     if (process.env.OPENAI_API_KEY) return process.env.OPENAI_API_KEY
     return null;
 }

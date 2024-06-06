@@ -23,6 +23,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "crypto": "^1.0.1",
     "openai": "^4.47.3"
   }
 }
