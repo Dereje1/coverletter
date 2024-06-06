@@ -8,6 +8,7 @@ type api_key = {
     key: string
     isActive: boolean
     id: number
+    encryptedKey: string
 }
 
 type payload = localResume | api_key;

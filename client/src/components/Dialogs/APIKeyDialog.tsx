@@ -13,6 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getFromLocalStorage, saveToLocalStorage, removeFromLocalStorage } from '../../utils/localstorage';
+import { encryptApiKey, maskApiKey } from '../../utils/encryption';
 
 interface APIKeyDialogProps {
     handleClose: () => void
@@ -24,6 +25,7 @@ type api_keys = {
     key: string
     isActive: boolean
     id: number
+    encryptedKey: string
 }
 
 // makes api key active
@@ -46,9 +48,9 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
         setStored_api_keys(getFromLocalStorage('api_keys'));
     }, [])
 
-    const getActiveKey = () =>{
-       const active = stored_api_keys.filter(a => a.isActive)
-       return active.length ? active[0].id : null
+    const getActiveKey = () => {
+        const active = stored_api_keys.filter(a => a.isActive)
+        return active.length ? active[0].id : null
     }
 
     return (
@@ -76,7 +78,14 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
                         <IconButton
                             onClick={() => {
                                 const id = Date.now()
-                                saveToLocalStorage('api_keys', { key: api_key, isActive: false, id })
+                                saveToLocalStorage('api_keys',
+                                    {
+                                        key: maskApiKey(api_key),
+                                        isActive: false,
+                                        id,
+                                        encryptedKey: encryptApiKey(api_key)
+                                    }
+                                )
                                 updateLocalStorage(id)
                                 setStored_api_keys(getFromLocalStorage('api_keys'));
                                 setapi_key('')
@@ -114,7 +123,7 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
                                                             checked={api_key.isActive}
                                                         />
                                                     }
-                                                    label={`${api_key.key.slice(0,5)}.........${api_key.key.slice(-5)}`} />
+                                                    label={`${api_key.key.slice(0, 5)}.........${api_key.key.slice(-5)}`} />
                                                 <IconButton
                                                     onClick={() => {
                                                         removeFromLocalStorage('api_keys', api_key)

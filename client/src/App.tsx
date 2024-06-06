@@ -74,6 +74,13 @@ type api_keys = {
   id: number
 }
 
+type activeKeyType = {
+  encryptedKey: string,
+  maskedKey: string
+} | null
+
+const initialActiveKey: activeKeyType = null;
+
 export default function App() {
   const [activeStep, setActiveStep] = useState(0);
   const [resume, setResume] = useState('')
@@ -81,7 +88,7 @@ export default function App() {
   const [activePrompt, setActivePrompt] = useState('prompt1');
   const [disableNextButton, setDisableNextButton] = useState(false);
   const [showAPIKeyDIalog, setShowAPIKeyDIalog] = useState(false);
-  const [activeKey, setActiveKey] = useState('');
+  const [activeKey, setActiveKey] = useState(initialActiveKey);
 
   useEffect(() => {
     if (activeStep === 0) {
@@ -109,10 +116,15 @@ export default function App() {
     const api_keys = getFromLocalStorage('api_keys');
     const active = api_keys.filter((a: api_keys) => a.isActive)
     if (active.length) {
-      setActiveKey(active[0].key);
+      setActiveKey(
+        {
+          encryptedKey: active[0].encryptedKey,
+          maskedKey: active[0].key
+        }
+      );
       return
     }
-    setActiveKey('')
+    setActiveKey(null)
   }
 
   const refresh = () => {
@@ -135,7 +147,7 @@ export default function App() {
               <KeyIcon color={activeKey ? 'success' : 'error'} sx={{ fontSize: 40 }} />
             </IconButton>
             <Typography component="h1" variant="caption" align="center">
-              {`Active OpenAI API Key: ${activeKey ? `${activeKey.slice(0, 5)}.........${activeKey.slice(-5)}` : '🚫'}`}
+              {`Active OpenAI API Key: ${activeKey ? activeKey.maskedKey : '🚫'}`}
             </Typography>
           </Box>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
@@ -150,7 +162,7 @@ export default function App() {
               resume={resume}
               description={description}
               activePrompt={activePrompt}
-              activeKey={activeKey || null}
+              activeKey={activeKey ? activeKey.encryptedKey : null}
               editInputs={() => setActiveStep(0)}
               refresh={refresh}
             /> : (
