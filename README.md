@@ -23,36 +23,50 @@ This project also requires an [OpenAI API key](https://platform.openai.com/docs/
    cd coverletter
    ```
 
+### Generate RSA Key Pair for Encryption
+Before setting up the API, generate your own RSA key pair for encryption. The public key will be used for the client, and the private key will be used for the backend.
+
+Generate your own RSA key pair for encryption:
+```bash
+openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+```
+
 ### Setting Up the API
-1. Navigate to the API directory: 
+1. **Navigate to the API directory:** 
    ```bash
    cd lambda_api
    ```
-2. Install the required packages: 
+2. **Install the required packages:** 
    ```bash
    npm install
    ```
-3. Generate your own RSA key pair for encryption:
-   ```bash
-   openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
-   openssl rsa -pubout -in private_key.pem -out public_key.pem
-   ```
-4. Create a `.env` file in the `lambda_api` directory and add the following content:
-   ```env
-   OPENAI_API_KEY='your-api-key'
-   PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
-   YOUR_PRIVATE_KEY_HERE
-   -----END PRIVATE KEY-----"
-   ```
-   **Note:** The private key is mandatory and must be stored securely. The OpenAI API key is optional and serves as a fallback if the client does not send an encrypted key.
+3. **Set Up Environment Variables:**
 
-5. Build the project and start the API locally using Serverless Offline and `tsc-watch`: 
+   You have two options for setting up the environment variables:
+
+   **Option A:** The client sends the API key, and the private key is required to decrypt it.
+   - Create a `.env` file in the `lambda_api` directory with the following content:
+     ```env
+     PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+     YOUR_PRIVATE_KEY_HERE
+     -----END PRIVATE KEY-----"
+     ```
+
+   **Option B:** No API key is sent from the client, and the API key is mandatory in the `.env` file to process the request.
+   - Create a `.env` file in the `lambda_api` directory with the following content:
+     ```env
+     OPENAI_API_KEY='your-api-key'
+     ```
+
+   **Note:** If both the private key and the OpenAI API key are available in the `.env` file, the API key in the `.env` file will act as a fallback if the client does not send the API keys.
+
+4. **Build the project and start the API locally using Serverless Offline and `tsc-watch`:** 
    ```bash
    npm run dev
    ```
 
-**Note:** The `npm run dev` script is configured in your `package.json` to run both `tsc-watch` and `serverless offline` concurrently.
-
+   **Note:** The `npm run dev` script is configured in your `package.json` to run both `tsc-watch` and `serverless offline` concurrently.
 
 ### Setting Up the Client
 1. Navigate to the client directory:
