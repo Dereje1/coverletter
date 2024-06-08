@@ -53,6 +53,7 @@ export default function GeneratedLetter({
 
     const getGeneratedData = async () => {
         const { data } = await axios.post(API_BASE_URL, { resume, description, prompt: activePrompt, api_key: activeKey })
+        console.log({data})
         setLetter(data.letter)
     }
 

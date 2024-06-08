@@ -11,6 +11,8 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import KeyIcon from '@mui/icons-material/Key';
+import Chip from '@mui/material/Chip';
+import Info from '@mui/icons-material/Info';
 import ResumeForm from './components/ResumeForm';
 import DescriptionForm from './components/DescriptionForm';
 import PromptPicker from './components/PromptPicker';
@@ -139,24 +141,36 @@ export default function App() {
       <CssBaseline />
       <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 1, md: 2 }, p: { xs: 1, md: 1 } }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: { xs: 'row', sm: 'column' },
+            justifyContent: { xs: 'space-between', sm: 'center' },
+            alignItems: 'center'
+          }}>
             <IconButton
               aria-label="save"
               size='large'
               onClick={() => setShowAPIKeyDIalog(true)}>
-              <KeyIcon color={activeKey ? 'success' : 'error'} sx={{ fontSize: 40 }} />
+              <KeyIcon color={activeKey ? 'success' : 'error'} sx={{ fontSize: { xs: 25, sm: 40 } }} />
             </IconButton>
             <Typography component="h1" variant="caption" align="center">
               {`Active OpenAI API Key: ${activeKey ? activeKey.maskedKey : '🚫'}`}
             </Typography>
           </Box>
-          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 3, display: { xs: 'none', sm: 'flex' } }}>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
               </Step>
             ))}
           </Stepper>
+          {activeStep < steps.length && <Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'center' }}>
+            <Chip
+              label={steps[activeStep]}
+              icon={<Info />}
+              sx={{ borderRadius: 2 }}
+            />
+          </Box>}
           {activeStep === steps.length ?
             <GeneratedLetter
               resume={resume}
@@ -176,8 +190,13 @@ export default function App() {
                   setActivePrompt,
                   activePrompt
                 })}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography sx={{ paddingTop: 4, fontWeight: 'bold' }}>
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  justifyContent: { sm: 'space-between' },
+                  alignItems: { xs: 'flex-end' }
+                }}>
+                  <Typography sx={{ paddingTop: { xs: 1, sm: 4 }, fontWeight: 'bold' }}>
                     {
                       activeStep === steps.length - 1 ? `Prompt Type: ${PromptObj[activePrompt].name}` : ''
                     }

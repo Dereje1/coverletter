@@ -7,6 +7,7 @@ import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import { getFromLocalStorage, saveToLocalStorage, removeFromLocalStorage } from '../utils/localstorage';
 
 interface ResumeFormProps {
@@ -61,8 +62,16 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
         }}
         localResume={warningDialogContents}
       />
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Stack direction="row" spacing={1} sx={{ marginRight: 3 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'flex-end',
+        pt: 2, 
+        pb: 2 
+        }}>
+        <Stack 
+        direction={{ xs: 'column', sm: 'row' }} 
+        spacing={1} 
+        sx={{ marginRight: 3 }}>
           {
             localStorageResumes.map((r: localResume) => {
               return (
@@ -93,7 +102,7 @@ export default function ResumeForm({ updateResume, resume }: ResumeFormProps) {
         <IconButton aria-label="save" color='primary' disabled={!resume.length} onClick={() => setOpenFormDialog(true)}>
           <SaveOutlinedIcon />
         </IconButton>
-      </div>
+      </Box>
 
       <TextField
         required

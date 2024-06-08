@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 interface DescriptionFormProps {
@@ -8,7 +9,11 @@ interface DescriptionFormProps {
 
 export default function DescriptionForm({ updateDescription, description }: DescriptionFormProps) {
   return (
-    <React.Fragment>
+    <Box sx={{
+      pt: 2,
+      pb: 2,
+      mt: 5
+    }}>
       <TextField
         required
         id="description"
@@ -22,6 +27,6 @@ export default function DescriptionForm({ updateDescription, description }: Desc
         onChange={(e) => updateDescription(e.target.value)}
         value={description}
       />
-    </React.Fragment>
+    </Box>
   );
 }

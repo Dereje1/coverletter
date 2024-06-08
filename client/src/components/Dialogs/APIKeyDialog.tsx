@@ -61,7 +61,7 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
             >
                 <DialogTitle>Manage OpenAI API keys</DialogTitle>
                 <DialogContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 350, height: 50, alignItems: 'flex-end' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 50, alignItems: 'flex-end' }}>
                         <TextField
                             autoFocus
                             required
