@@ -29,11 +29,11 @@ type api_keys = {
 }
 
 // makes api key active
-const updateLocalStorage = (api_key_id: number) => {
+const updateLocalStorage = (api_key_id: number, isActive: boolean) => {
     const inLocalStorage = getFromLocalStorage('api_keys');
     const updatedKeys = inLocalStorage.map((a: api_keys) => ({
         ...a,
-        isActive: a.id === api_key_id
+        isActive: a.id === api_key_id && !isActive
     }))
     localStorage.setItem('api_keys', JSON.stringify(updatedKeys))
 }
@@ -86,7 +86,7 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
                                         encryptedKey: encryptApiKey(api_key)
                                     }
                                 )
-                                updateLocalStorage(id)
+                                updateLocalStorage(id, false)
                                 setStored_api_keys(getFromLocalStorage('api_keys'));
                                 setapi_key('')
                                 updateActiveKey()
@@ -116,7 +116,7 @@ export default function APIKeyDialog({ open, handleClose, updateActiveKey }: API
                                                     control={
                                                         <Radio
                                                             onClick={() => {
-                                                                updateLocalStorage(api_key.id)
+                                                                updateLocalStorage(api_key.id, api_key.isActive)
                                                                 setStored_api_keys(getFromLocalStorage('api_keys'));
                                                                 updateActiveKey();
                                                             }}
