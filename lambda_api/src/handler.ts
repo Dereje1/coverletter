@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { inputTypes } from './interfaces';
 import generateDraftLetter from './generateLetter';
 
-const responseUtil = (letter: string | null, statusCode: number) => (
+const responseUtil = (response: { [key: string]: string | null | undefined | unknown }, statusCode: number) => (
   {
     statusCode,
     headers: {
@@ -12,9 +12,7 @@ const responseUtil = (letter: string | null, statusCode: number) => (
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(
-      {
-        letter,
-      },
+      response,
       null,
       2
     ),
@@ -28,14 +26,14 @@ export const index = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
     const { resume, description, prompt, api_key }: inputTypes = JSON.parse(event.body || '{}');
     // Start measuring time for the OpenAI API call
     const start = new Date().getTime();
-    const letter = await generateDraftLetter({ resume, description, prompt, api_key })
+    const response = await generateDraftLetter({ resume, description, prompt, api_key })
     // Measure time taken for the OpenAI API call
     const end = new Date().getTime();
     console.log(`OpenAI API call took ${end - start} ms`);
-    return  responseUtil(letter, 200);
+    return responseUtil(response, 200);
 
   } catch (err) {
     console.log(err);
-    return responseUtil('some error happened', 500)
+    return responseUtil({ error: 'An error happened in the lambda handler' }, 500)
   }
 };

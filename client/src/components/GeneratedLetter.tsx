@@ -20,6 +20,8 @@ interface GeneratedLetterProps {
     refresh: () => void
 }
 
+const initialResponse: string | null = null;
+
 const downloadDocument = (letter: string) => {
     // Instantiate jsPDF instance
     const doc = new jsPDF();
@@ -43,17 +45,22 @@ const copyToClipboard = (letter: string) => {
 
 export default function GeneratedLetter({
     resume,
-    description, 
-    activePrompt, 
+    description,
+    activePrompt,
     activeKey,
-    editInputs, 
+    editInputs,
     refresh
 }: GeneratedLetterProps) {
-    const [letter, setLetter] = useState(null)
+    const [letter, setLetter] = useState(initialResponse)
+    const [isError, setIsError] = useState(false);
 
     const getGeneratedData = async () => {
         const { data } = await axios.post(API_BASE_URL, { resume, description, prompt: activePrompt, api_key: activeKey })
-        console.log({data})
+        if (data.error) {
+            setIsError(true)
+            setLetter(`Error: ${data.error}`)
+            return;
+        }
         setLetter(data.letter)
     }
 
@@ -64,17 +71,23 @@ export default function GeneratedLetter({
     if (!letter) return <LinearProgress color="secondary" variant="indeterminate" />;
     return (
         <>
-            <Tooltip title="Download" placement='top'>
-                <IconButton aria-label="save" color='primary' onClick={() => downloadDocument(letter)}>
-                    <DownloadIcon />
-                </IconButton>
-            </Tooltip>
 
-            <Tooltip title="Copy to clipboard" placement='top'>
-                <IconButton aria-label="save" color='primary' onClick={() => copyToClipboard(letter)}>
-                    <ContentCopyIcon />
-                </IconButton>
-            </Tooltip>
+            {!isError && (
+                <>
+                    <Tooltip title="Download" placement='top'>
+                        <IconButton aria-label="save" color='primary' onClick={() => downloadDocument(letter)}>
+                            <DownloadIcon />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Copy to clipboard" placement='top'>
+                        <IconButton aria-label="save" color='primary' onClick={() => copyToClipboard(letter)}>
+                            <ContentCopyIcon />
+                        </IconButton>
+                    </Tooltip>
+                </>
+            )
+            }
 
             <Tooltip title="Edit inputs" placement='top'>
                 <IconButton aria-label="save" color='success' onClick={editInputs}>
@@ -89,7 +102,14 @@ export default function GeneratedLetter({
                 </IconButton>
             </Tooltip>
 
-            <Paper elevation={3} sx={{ padding: 2, whiteSpace: 'pre-wrap' }}>{letter}</Paper>
+            <Paper
+                elevation={3}
+                sx={{
+                    padding: 2,
+                    whiteSpace: 'pre-wrap',
+                    color: isError ? 'red' : ''
+                }}
+            >{letter}</Paper>
         </>
     );
 }
